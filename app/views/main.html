@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="hot-table" hot-table
+      datarows="data"
+      contextMenu="true"
+      rowHeaders="false"
+      startCols="5"
+      startRows="5">
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <table datatable="ng" class="row-border hover" ng-if="dataSet">
+        <thead>
+          <tr>
+              <th ng-repeat="heading in data[0] track by $index">{{heading}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="row in dataSet track by $index" ng-if="$index > 0">
+              <td ng-repeat="cell in row track by $index">{{cell}}</td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
