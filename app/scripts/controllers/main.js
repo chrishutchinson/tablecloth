@@ -32,13 +32,52 @@ angular.module('tableclothApp')
 
     $scope.dataSet = false;
 
-    $scope.$watch('data', function(value, old) {
-  		if(value !== old) {
-  			var dataSet = value;
-  			$scope.dataSet = dataSet;
-        setOptions();
-  		}
-    }, true);
+    var tableHTML = '',
+        tableHeadHTML = '',
+        tableBodyHTML = '';
+
+    var setCode = function() {
+      var dataNoHeaders = angular.copy($scope.dataSet);
+      if(typeof dataNoHeaders[0] !== 'undefined') {
+        var headers = angular.copy(dataNoHeaders[0]);
+        delete dataNoHeaders[0];
+
+        var headersData = [];
+        angular.forEach(headers, function(e, i) {
+          headersData.push({
+            title: e
+          });
+        });
+      }
+
+      var rand = Math.floor(Math.random() * (10000 - 1)) + 1;
+      $scope.resources = '<link rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css" />\n<script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js" type="text/javascript"></script>'; 
+      $scope.html = '<table id="table-' + rand + '"></table>'; 
+      $scope.script = '<script type="text/javascript">\n' + 
+                        '  $(document).ready(function() {\n' + 
+                          '    $(\'#table-' + rand + '\').dataTable({\n' +
+                            '      ordering: ' + $scope.ordering + ',\n' + 
+                            '      searching: ' + $scope.searching + ',\n' + 
+                            '      paging: ' + $scope.paging + ',\n' + 
+                            '      displayLength: ' + $scope.recordsPerPage + ',\n' + 
+                            '      columns: ' + JSON.stringify(headersData) + ',\n' +
+                            '      data: ' + returnJSONString(dataNoHeaders) + ',\n' +
+                          '    });\n' + 
+                        '  });\n' + 
+                      '</script>';
+
+    };
+
+    var returnJSONString = function(data) {
+      var returnData = [];
+      angular.forEach(data, function(e, i) {
+        if(e !== null && typeof e !== 'undefined') {
+          returnData.push(e);
+        }
+      });
+
+      return JSON.stringify(returnData);
+    };
 
     var setOptions = function() {
       $scope.dataTableOptions = {
@@ -67,37 +106,6 @@ angular.module('tableclothApp')
     };
     getDtInstance();
 
-    var getRandomInt = function(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    };
-
-    var tableHTML = '',
-        tableHeadHTML = '',
-        tableBodyHTML = '';
-    var setCode = function() {
-      angular.forEach($scope.data, function(e, i){
-        if(i === 0) {
-          tableHeadHTML += '<thead>\n<tr>\n';
-          angular.forEach(e, function(cell) {
-            tableHeadHTML += '<th>' + cell + '</th>\n';
-          });
-          tableHeadHTML += '</tr>\n</thead>';
-        } else {
-          tableBodyHTML += '<tr>\n';
-          angular.forEach(e, function(cell) {
-            tableBodyHTML += '<td>' + cell + '</td>\n';
-          });
-          tableBodyHTML += '</tr>\n';
-        }
-      });
-
-      tableHTML = tableHeadHTML + '<tbody>\n' + tableBodyHTML + '</tbody>\n';
-
-      var rand = getRandomInt(1, 10000);
-      $scope.html = '<table id="table-' + rand + '">\n' + tableHTML + '</table>'; 
-      $scope.script = "<script type=\"text/javascript\">$(document).ready(function() { $('#table-" + rand + "').DataTable(); } );</script>";
-    };
-
     var rerender = function(value, old) {
       if(value !== old) {
         getDtInstance(function(dtInstance) {
@@ -113,4 +121,13 @@ angular.module('tableclothApp')
     $scope.$watch('recordsPerPage', rerender);
     $scope.$watch('searching', rerender);
     $scope.$watch('ordering', rerender);
+
+    $scope.$watch('data', function(value, old) {
+      if(value !== old) {
+        var dataSet = value;
+        $scope.dataSet = dataSet;
+        setOptions();
+        setCode();
+      }
+    }, true);
   });
