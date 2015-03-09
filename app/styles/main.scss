@@ -3,10 +3,22 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
 body {
   margin: 20px;
 }
 
 .hot-table {
   overflow: auto;
+}
+
+.hot-table-wrapper {
+	padding-bottom: 20px;
+}
+
+.ht_master {
+	margin-bottom: 10px;
 }

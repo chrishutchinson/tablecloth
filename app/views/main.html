@@ -1,5 +1,6 @@
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-12 hot-table-wrapper">
+    <h2>Enter your data</h2>
     <div class="hot-table" hot-table
       datarows="data"
       contextMenu="true"
@@ -8,9 +9,44 @@
       startRows="5">
     </div>
   </div>
+</div>
 
-  <div class="col-md-6">
-    <table datatable="ng" class="row-border hover" ng-if="dataSet">
+<div class="row">
+  <div class="col-md-3 hot-table-wrapper">
+    <hr />
+    <form class="form">
+      <h2>Configure</h2>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="paging">
+          Enable pagination
+        </label>
+      </div>
+      <div class="form-group" ng-show="paging">
+        <label>
+          <input type="number" class="form-control" ng-model="recordsPerPage">
+          Rows per page
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="searching">
+          Enable searching
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="ordering">
+          Enable ordering
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-9">
+    <hr />
+    <h2>Sample output</h2>
+    <table datatable="ng" dt-options="dataTableOptions" class="row-border hover" ng-if="dataSet">
         <thead>
           <tr>
               <th ng-repeat="heading in data[0] track by $index">{{heading}}</th>
@@ -22,5 +58,15 @@
           </tr>
         </tbody>
     </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <hr />
+  <h2>Embed code</h2>
+
+  <textarea class="form-control">{{html}}</textarea>
+  <textarea class="form-control">{{script}}</textarea>
   </div>
 </div>
